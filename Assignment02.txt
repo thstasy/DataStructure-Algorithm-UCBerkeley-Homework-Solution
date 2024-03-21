@@ -1,0 +1,346 @@
+#TASK 1
+
+Stacks:
+Real-Life Example:
+Stack of Plates:
+Imagine you're stacking plates on a table. You place one plate on top of another. When you need to remove a plate, you take the one from the top first. This Last-In-First-Out (LIFO) behavior mimics a stack. You can only add or remove plates from the top.
+
+Programming Example:
+Function Calls:
+In programming, function calls are managed using a stack. When a function is called, its execution context, including local variables and return address, is pushed onto the call stack. As functions complete, they are popped off the stack, and the program resumes execution from where it left off.
+
+Queues:
+Real-Life Example:
+Supermarket Checkout Line:
+In a supermarket, customers line up at the checkout counter to pay for their items. The first customer to join the line is the first one to be served, following the First-In-First-Out (FIFO) principle. New customers join the back of the line, and the cashier serves the customers in the order they arrived.
+
+Programming Example:
+Breadth-First Search (BFS) in Graphs:
+In graph theory and algorithms, BFS uses a queue to traverse nodes level by level. Starting from a source node, BFS explores all neighboring nodes at the current level before moving to the next level. This ensures that nodes are visited in the order they were discovered, making use of the FIFO property of queues.
+
+Deques (Double-ended queues):
+Real-Life Example:
+Sliding Doors:
+Deques are like sliding doors that allow entry and exit from both ends. In buildings or vehicles with sliding doors, people can enter or exit through either side of the door, providing flexibility and convenience.
+
+Programming Example:
+Deque Data Structure:
+In programming, a deque is a versatile data structure that supports insertion and deletion of elements from both the front and the back. It can be used in various scenarios such as implementing algorithms like breadth-first search or maintaining a sliding window in problems like finding maximum or minimum values in a window of elements.
+
+
+
+#TASK 2
+
+import java.util.Stack;
+
+public class BalancedBraces {
+
+    public static boolean hasBalancedBraces(String str) {
+        Stack<Character> stack = new Stack<>();
+
+        for (char c : str.toCharArray()) {
+            if (c == '(' || c == '[' || c == '{') {
+                stack.push(c);
+            } else if (c == ')' || c == ']' || c == '}') {
+                if (stack.isEmpty()) {
+                    return false;
+                }
+
+                char top = stack.pop();
+                if ((c == ')' && top != '(') || (c == ']' && top != '[') || (c == '}' && top != '{')) {
+                    return false;
+                }
+            }
+        }
+
+        return stack.isEmpty();
+    }
+
+    public static void main(String[] args) {
+        String[] testCases = {
+            "[ ]",
+            "{}{}[]()",
+            "[{()}]",
+            "(()[[[()({})]]])",
+            "[ ] [",
+            "{{}[](})",
+            "[{)}]",
+            "(()[()({})]]])"
+        };
+
+        for (String testCase : testCases) {
+            System.out.println(testCase + " : " + hasBalancedBraces(testCase));
+        }
+    }
+}
+
+
+//This code defines a function hasBalancedBraces that takes a string as input and returns true if the string contains balanced braces, //otherwise returns false. It uses a stack to keep track of opening braces encountered so far. It iterates through the characters of the //string, pushes opening braces onto the stack, and pops matching opening braces when encountering closing braces. Finally, it checks if //the stack is empty, indicating that all braces are balanced.
+
+
+#TASK 3
+
+##Test Function:
+
+public class DequeTest {
+
+    public static void main(String[] args) {
+        testDequeOperations();
+    }
+
+    public static void testDequeOperations() {
+        Deque deque = new Deque(5);
+
+        // Append elements
+        deque.appendLeft(1);
+        deque.appendRight(2);
+        deque.appendLeft(3);
+        deque.appendRight(4);
+        deque.appendLeft(5);
+
+        // Print deque
+        System.out.print("Deque after appending elements: ");
+        deque.printDeque(); // Should print: 5 3 1 2 4
+
+        // Pop elements
+        System.out.println("Popped left element: " + deque.popLeft()); // Pop 5
+        System.out.println("Popped right element: " + deque.popRight()); // Pop 4
+
+        // Print deque after popping elements
+        System.out.print("Deque after popping elements: ");
+        deque.printDeque(); // Should print: 3 1 2
+
+        // Peek elements
+        System.out.println("Peek left: " + deque.peekLeft()); // Should print: 3
+        System.out.println("Peek right: " + deque.peekRight()); // Should print: 2
+
+        // Get deque count
+        System.out.println("Deque count: " + deque.getCount()); // Should print: 3
+    }
+}
+
+//This test function testDequeOperations() creates a Deque object, performs various operations such as appending elements to both ends of //the deque, popping elements from both ends, peeking at elements without removing them, getting the count of elements in the deque, and //printing the contents of the deque. It ensures that the implemented Deque class functions correctly according to its specifications.
+
+
+##Deque Function
+
+public class Deque {
+    private int[] deque;
+    private int front;
+    private int rear;
+    private int size;
+    private int capacity;
+
+    public Deque(int capacity) {
+        this.capacity = capacity;
+        this.deque = new int[capacity];
+        this.front = -1;
+        this.rear = 0;
+        this.size = 0;
+    }
+
+    public void appendLeft(int element) {
+        if (isFull()) {
+            System.out.println("Deque is full. Cannot append element.");
+            return;
+        }
+
+        if (isEmpty()) {
+            front = 0;
+            rear = 0;
+        } else if (front == 0) {
+            front = capacity - 1;
+        } else {
+            front--;
+        }
+
+        deque[front] = element;
+        size++;
+    }
+
+    public void appendRight(int element) {
+        if (isFull()) {
+            System.out.println("Deque is full. Cannot append element.");
+            return;
+        }
+
+        if (isEmpty()) {
+            front = 0;
+            rear = 0;
+        } else if (rear == capacity - 1) {
+            rear = 0;
+        } else {
+            rear++;
+        }
+
+        deque[rear] = element;
+        size++;
+    }
+
+    public int popLeft() {
+        if (isEmpty()) {
+            System.out.println("Deque is empty. Cannot pop element.");
+            return -1;
+        }
+
+        int poppedElement = deque[front];
+
+        if (front == rear) {
+            front = -1;
+            rear = 0;
+        } else if (front == capacity - 1) {
+            front = 0;
+        } else {
+            front++;
+        }
+
+        size--;
+        return poppedElement;
+    }
+
+    public int popRight() {
+        if (isEmpty()) {
+            System.out.println("Deque is empty. Cannot pop element.");
+            return -1;
+        }
+
+        int poppedElement = deque[rear];
+
+        if (front == rear) {
+            front = -1;
+            rear = 0;
+        } else if (rear == 0) {
+            rear = capacity - 1;
+        } else {
+            rear--;
+        }
+
+        size--;
+        return poppedElement;
+    }
+
+    public int peekLeft() {
+        if (isEmpty()) {
+            System.out.println("Deque is empty. No element to peek.");
+            return -1;
+        }
+        return deque[front];
+    }
+
+    public int peekRight() {
+        if (isEmpty()) {
+            System.out.println("Deque is empty. No element to peek.");
+            return -1;
+        }
+        return deque[rear];
+    }
+
+    public int getCount() {
+        return size;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public boolean isFull() {
+        return size == capacity;
+    }
+
+    public void printDeque() {
+        if (isEmpty()) {
+            System.out.println("Deque is empty.");
+            return;
+        }
+
+        if (front <= rear) {
+            for (int i = front; i <= rear; i++) {
+                System.out.print(deque[i] + " ");
+            }
+        } else {
+            for (int i = front; i < capacity; i++) {
+                System.out.print(deque[i] + " ");
+            }
+            for (int i = 0; i <= rear; i++) {
+                System.out.print(deque[i] + " ");
+            }
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        Deque deque = new Deque(5);
+        deque.appendLeft(1);
+        deque.appendRight(2);
+        deque.appendLeft(3);
+        deque.appendRight(4);
+        deque.appendLeft(5);
+
+        deque.printDeque(); // Should print: 5 3 1 2 4
+
+        deque.popRight(); // Pop 4
+        deque.popLeft(); // Pop 5
+
+        deque.printDeque(); // Should print: 3 1 2
+
+        System.out.println("Peek Left: " + deque.peekLeft()); // Should print: 3
+        System.out.println("Peek Right: " + deque.peekRight()); // Should print: 2
+        System.out.println("Deque Count: " + deque.getCount()); // Should print: 3
+    }
+}
+
+//This implementation of the Deque data structure maintains an array to store elements, along with front and rear pointers to keep track of //the deque's boundaries. It includes methods for appending elements to both ends of the deque, popping elements from both ends, peeking at //the elements without removing them, getting the count of elements in the deque, checking if the deque is empty or full, and printing the //contents of the deque. The implementation ensures that the array is used without any built-in methods except for the index operator.
+
+
+
+#TASK 4
+
+public class BinarySearch {
+
+    public static int binarySearch(int[] arr, int target) {
+        return binarySearchRecursive(arr, target, 0, arr.length - 1);
+    }
+
+    private static int binarySearchRecursive(int[] arr, int target, int left, int right) {
+        if (left > right) {
+            return -1; // Element not found
+        }
+
+        int mid = left + (right - left) / 2;
+
+        if (arr[mid] == target) {
+            return mid; // Element found at index mid
+        } else if (arr[mid] < target) {
+            return binarySearchRecursive(arr, target, mid + 1, right); // Search right half
+        } else {
+            return binarySearchRecursive(arr, target, left, mid - 1); // Search left half
+        }
+    }
+
+    public static void testBinarySearch() {
+        int[] arr = {2, 4, 6, 8, 10, 12, 14, 16, 18, 20};
+
+        // Test cases
+        int target1 = 10; // Element found at index 4
+        int target2 = 5;  // Element not found
+        int target3 = 20; // Element found at index 9
+        int target4 = 15; // Element not found
+
+        System.out.println("Searching for element 10: Index = " + binarySearch(arr, target1));
+        System.out.println("Searching for element 5: Index = " + binarySearch(arr, target2));
+        System.out.println("Searching for element 20: Index = " + binarySearch(arr, target3));
+        System.out.println("Searching for element 15: Index = " + binarySearch(arr, target4));
+    }
+
+    public static void main(String[] args) {
+        testBinarySearch();
+    }
+}
+
+
+//In this code:
+
+//binarySearch() is the main function that clients use to perform a binary search on a sorted array.
+//binarySearchRecursive() is a helper function that performs the actual binary search recursively.
+//The testBinarySearch() function tests the binary search function with various test cases.
+//This implementation returns the index of the target element if found, and -1 if the element is not present in the array.
